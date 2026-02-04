@@ -1,4 +1,5 @@
 const Testimonial = require("../models/Testimonial");
+const { appError } = require("../utils/appError");
 
 // Create testimonial
 const createTestimonial = async (req, res, next) => {
@@ -81,6 +82,37 @@ const getAllTestimonials = async (req, res, next) => {
   }
 };
 
+// Update testimonial by id
+const updateTestimonial = async (req, res, next) => {
+  try {
+    const updates = req.body;
+
+    if (Object.keys(updates || {}).length === 0) {
+      const err = appError("At least one updated value must provide!", 400);
+      return next(err);
+    }
+
+    const testimonial = await Testimonial.findByIdAndUpdate(
+      req.params.id,
+      updates,
+      { new: true, runValidators: true },
+    );
+
+    if (!testimonial) {
+      const err = appError("Testimonial not found", 404);
+      return next(err);
+    }
+
+    res.send({
+      success: true,
+      message: "Testimonial updated successfully",
+      data: testimonial,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Delete testimonial by id
 const deleteTestimonial = async (req, res, next) => {
   try {
@@ -100,4 +132,9 @@ const deleteTestimonial = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllTestimonials, createTestimonial, deleteTestimonial };
+module.exports = {
+  getAllTestimonials,
+  createTestimonial,
+  updateTestimonial,
+  deleteTestimonial,
+};
