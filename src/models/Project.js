@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const projectSchema = new mongoose.Schema(
   {
@@ -57,6 +58,8 @@ const projectSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+projectSchema.plugin(mongoosePaginate);
 
 // Update timestamp before saving
 projectSchema.pre("save", function () {
