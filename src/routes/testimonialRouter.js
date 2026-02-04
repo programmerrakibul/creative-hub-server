@@ -1,7 +1,12 @@
 const express = require("express");
-const { createTestimonial } = require("../controllers/testimonialController");
+const {
+  createTestimonial,
+  getAllTestimonials,
+} = require("../controllers/testimonialController");
 
 const testimonialRouter = express.Router();
+
+testimonialRouter.get("/", getAllTestimonials);
 
 testimonialRouter.post("/", createTestimonial);
 

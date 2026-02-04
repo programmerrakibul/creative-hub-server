@@ -81,7 +81,7 @@ const createProject = async (req, res, next) => {
       status,
     });
 
-    res.status(201).send({
+    resizeBy.send({
       success: true,
       message: "Project created successfully",
       data: project,

@@ -5,8 +5,8 @@ const createTestimonial = async (req, res, next) => {
   try {
     const {
       clientName,
-      position,
-      company,
+      position = "",
+      company = "",
       content,
       location,
       country,
@@ -33,4 +33,52 @@ const createTestimonial = async (req, res, next) => {
   }
 };
 
-module.exports = { createTestimonial };
+// Get all testimonials
+const getAllTestimonials = async (req, res, next) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      country,
+      sort = "-createdAt",
+    } = req.query;
+
+    const query = {};
+
+    // Apply filter
+    if (country) query.country = country;
+    if (search) {
+      query.$or = [
+        { clientName: { $regex: search, $options: "i" } },
+        { company: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const options = {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      sort,
+      select: "-__v",
+    };
+
+    const testimonials = await Testimonial.paginate(query, options);
+
+    res.send({
+      success: true,
+      data: testimonials.docs,
+      pagination: {
+        total: testimonials.totalDocs,
+        limit: testimonials.limit,
+        page: testimonials.page,
+        pages: testimonials.totalPages,
+        hasNext: testimonials.hasNextPage,
+        hasPrev: testimonials.hasPrevPage,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getAllTestimonials, createTestimonial };
