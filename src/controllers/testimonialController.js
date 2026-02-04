@@ -4,24 +4,12 @@ const { appError } = require("../utils/appError");
 // Create testimonial
 const createTestimonial = async (req, res, next) => {
   try {
-    const {
-      clientName,
-      position = "",
-      company = "",
-      content,
-      location,
-      country,
-      imageUrl,
-    } = req.body;
+    const { position = "", company = "", ...rest } = req.body;
 
     const testimonial = await Testimonial.create({
-      clientName,
       position,
       company,
-      content,
-      location,
-      country,
-      imageUrl,
+      ...rest,
     });
 
     res.send({
