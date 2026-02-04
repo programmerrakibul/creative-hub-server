@@ -1,4 +1,5 @@
 const Project = require("../models/Project");
+const { appError } = require("../utils/appError");
 
 // Get all projects with filters
 const getAllProjects = async (req, res, next) => {
@@ -90,4 +91,29 @@ const createProject = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllProjects, createProject };
+const deleteProject = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!id?.trim() || id.length !== 24) {
+      const err = appError("Invalid project ID", 400);
+      return next(err);
+    }
+
+    const project = await Project.findByIdAndDelete(id);
+
+    if (!project) {
+      const err = appError("Project not found", 404);
+      return next(err);
+    }
+
+    res.send({
+      success: true,
+      message: "Project deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getAllProjects, createProject, deleteProject };
