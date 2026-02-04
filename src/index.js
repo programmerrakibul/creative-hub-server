@@ -6,6 +6,7 @@ const { connectDB } = require("./config/db");
 const { globalErrorHandler } = require("./middlewares/globalErrorHandler");
 const { projectRouter } = require("./routes/projectRouter");
 const { testimonialRouter } = require("./routes/testimonialRouter");
+const { teamRouter } = require("./routes/teamRouter");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -25,6 +26,7 @@ const startServer = async () => {
 
     app.use("/api/projects", projectRouter);
     app.use("/api/testimonials", testimonialRouter);
+    app.use("/api/team", teamRouter);
 
     app.use((req, res) => {
       res.status(404).send({
