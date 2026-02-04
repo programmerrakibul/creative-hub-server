@@ -91,6 +91,50 @@ const createProject = async (req, res, next) => {
   }
 };
 
+// Update project
+const updateProject = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (!id?.trim() || id.length !== 24) {
+      const err = appError("Invalid project ID", 400);
+      return next(err);
+    }
+
+    if (Object.keys(updates || {}).length === 0) {
+      const err = appError("At least one updated value must provide!", 400);
+      return next(err);
+    }
+
+    // Handle technologies array
+    if (typeof updates?.technologies === "string") {
+      updates.technologies = updates.technologies
+        .split(",")
+        .map((t) => t.trim());
+    }
+
+    const project = await Project.findByIdAndUpdate(id, updates, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!project) {
+      const err = appError("Project not found", 404);
+      return next(err);
+    }
+
+    res.send({
+      success: true,
+      message: "Project updated successfully",
+      data: project,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Delete project by id
 const deleteProject = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -116,4 +160,9 @@ const deleteProject = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllProjects, createProject, deleteProject };
+module.exports = {
+  getAllProjects,
+  createProject,
+  updateProject,
+  deleteProject,
+};
