@@ -1,4 +1,5 @@
 const Team = require("../models/Team");
+const { appError } = require("../utils/appError");
 
 // Get all testimonials
 const getAllTeamMember = async (req, res, next) => {
@@ -56,4 +57,23 @@ const createTeamMember = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllTeamMember, createTeamMember };
+// Delete team member by id
+const deleteTeamMember = async (req, res, next) => {
+  try {
+    const testimonial = await Team.findByIdAndDelete(req.params.id);
+
+    if (!testimonial) {
+      const err = appError("Team member not found", 404);
+      return next(err);
+    }
+
+    res.send({
+      success: true,
+      message: "Team member deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getAllTeamMember, createTeamMember, deleteTeamMember };
