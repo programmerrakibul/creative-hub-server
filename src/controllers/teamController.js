@@ -57,6 +57,36 @@ const createTeamMember = async (req, res, next) => {
   }
 };
 
+// Update team member by id
+const updateTeamMember = async (req, res, next) => {
+  try {
+    const updates = req.body;
+
+    if (Object.keys(updates || {}).length === 0) {
+      const err = appError("At least one updated value must provide!", 400);
+      return next(err);
+    }
+
+    const teamMember = await Team.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!teamMember) {
+      const err = appError("Team member not found", 404);
+      return next(err);
+    }
+
+    res.send({
+      success: true,
+      message: "Team member updated successfully",
+      data: teamMember,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Delete team member by id
 const deleteTeamMember = async (req, res, next) => {
   try {
@@ -76,4 +106,9 @@ const deleteTeamMember = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllTeamMember, createTeamMember, deleteTeamMember };
+module.exports = {
+  getAllTeamMember,
+  createTeamMember,
+  updateTeamMember,
+  deleteTeamMember,
+};
