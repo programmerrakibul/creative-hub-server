@@ -5,6 +5,7 @@ const {
   deleteProject,
   updateProject,
 } = require("../controllers/projectController");
+const { validateID } = require("../validators/validateID");
 
 const projectRouter = express.Router();
 
@@ -12,8 +13,8 @@ projectRouter.get("/", getAllProjects);
 
 projectRouter.post("/", createProject);
 
-projectRouter.put("/:id", updateProject);
+projectRouter.put("/:id", validateID, updateProject);
 
-projectRouter.delete("/:id", deleteProject);
+projectRouter.delete("/:id", validateID, deleteProject);
 
 module.exports = { projectRouter };

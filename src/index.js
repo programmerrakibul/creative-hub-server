@@ -24,7 +24,7 @@ const startServer = async () => {
     });
 
     app.use("/api/projects", projectRouter);
-    app.use("/api/testimonial", testimonialRouter);
+    app.use("/api/testimonials", testimonialRouter);
 
     app.use((req, res) => {
       res.status(404).send({

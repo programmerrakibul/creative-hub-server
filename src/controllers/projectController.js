@@ -94,13 +94,7 @@ const createProject = async (req, res, next) => {
 // Update project
 const updateProject = async (req, res, next) => {
   try {
-    const { id } = req.params;
     const updates = req.body;
-
-    if (!id?.trim() || id.length !== 24) {
-      const err = appError("Invalid project ID", 400);
-      return next(err);
-    }
 
     if (Object.keys(updates || {}).length === 0) {
       const err = appError("At least one updated value must provide!", 400);
@@ -114,7 +108,7 @@ const updateProject = async (req, res, next) => {
         .map((t) => t.trim());
     }
 
-    const project = await Project.findByIdAndUpdate(id, updates, {
+    const project = await Project.findByIdAndUpdate(req.params.id, updates, {
       new: true,
       runValidators: true,
     });
@@ -137,14 +131,7 @@ const updateProject = async (req, res, next) => {
 // Delete project by id
 const deleteProject = async (req, res, next) => {
   try {
-    const { id } = req.params;
-
-    if (!id?.trim() || id.length !== 24) {
-      const err = appError("Invalid project ID", 400);
-      return next(err);
-    }
-
-    const project = await Project.findByIdAndDelete(id);
+    const project = await Project.findByIdAndDelete(req.params.id);
 
     if (!project) {
       const err = appError("Project not found", 404);

@@ -81,4 +81,23 @@ const getAllTestimonials = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllTestimonials, createTestimonial };
+// Delete testimonial by id
+const deleteTestimonial = async (req, res, next) => {
+  try {
+    const testimonial = await Testimonial.findByIdAndDelete(req.params.id);
+
+    if (!testimonial) {
+      const err = appError("Testimonial not found", 404);
+      return next(err);
+    }
+
+    res.send({
+      success: true,
+      message: "Testimonial deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getAllTestimonials, createTestimonial, deleteTestimonial };
