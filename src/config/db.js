@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const DB_USERNAME = process.env.DB_USERNAME;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_NAME = process.env.DB_NAME || "creative-hub";
+const DB_HOST = process.env.DB_HOST;
 
 // Validate required environment variables
 if (!DB_USERNAME?.trim()) {
@@ -13,7 +14,11 @@ if (!DB_PASSWORD?.trim()) {
   throw new Error("DB_PASSWORD environment variable is required");
 }
 
-const uri = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.xoreaon.mongodb.net/${DB_NAME}?appName=Cluster0`;
+if (!DB_HOST?.trim()) {
+  throw new Error("DB_HOST environment variable is required");
+}
+
+const uri = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?appName=Cluster0`;
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },

@@ -39,10 +39,11 @@ const startServer = async () => {
     app.use(globalErrorHandler);
 
     app.listen(PORT, () => {
-      console.log(`Server running in port ${PORT}`);
+      // console.log(`Server running in port ${PORT}`);
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
+    process.exit(1)
   }
 };
 
